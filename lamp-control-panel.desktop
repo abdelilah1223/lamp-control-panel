@@ -1,0 +1,10 @@
+
+[Desktop Entry]
+Name=LAMP Control Panel
+Comment=Manage PHP, MariaDB and phpMyAdmin
+Exec=lamp-control-panel
+Icon=lamp-control-panel
+Type=Application
+Terminal=false
+Categories=Development;System;
+StartupNotify=true
