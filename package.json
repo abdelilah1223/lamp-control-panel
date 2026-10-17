@@ -1,0 +1,65 @@
+{
+  "name": "lamp-control-panel",
+  "productName": "LAMP Control Panel",
+  "version": "1.0.0",
+  "description": "Advanced LAMP and PHP control dashboard with Electron frontend",
+  "homepage": "https://github.com/Abdelilah/lamp-control-panel",
+  "author": "Abdelilah <albaroudiabdelilah92@gmail.com>",
+  "main": "main.js",
+  "license": "MIT",
+  "desktopName": "lamp-control-panel.desktop",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "com.abdelilah.lampcontrolpanel",
+    "productName": "LAMP Control Panel",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "package.json",
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "src/**/*",
+      "scripts/**/*"
+    ],
+    "linux": {
+      "maintainer": "Abdelilah <albaroudiabdelilah92@gmail.com>",
+      "icon": "build/icon.png",
+      "target": [
+        "AppImage",
+        "rpm"
+      ],
+      "category": "Development",
+      "executableArgs": [
+        "--no-sandbox"
+      ]
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-${version}-setup.${ext}"
+    }
+  }
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAMP Control Panel</title>
+    <meta name="description" content="Advanced LAMP server control dashboard — manage Apache, MariaDB, and PHP from one place." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+
+      <!-- ── Header ───────────────────────────────────────────────── -->
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Local server control</p>
+          <h1>Server Control Center</h1>
+        </div>
+        <div class="topbar-actions">
+          <button id="startAll" class="action-btn start-all-btn">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Start All
+          </button>
+          <button id="stopAll" class="action-btn stop-all-btn">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg> Stop All
+          </button>
+          <button id="refreshAll" class="ghost-button">↻ Refresh</button>
+        </div>
+      </header>
+
+      <!-- ── Stack Setup ──────────────────────────────────────────── -->
+      <section class="panel stack-panel" id="stackPanel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">System readiness</p>
+            <h2>Stack Setup</h2>
+          </div>
+          <div class="stack-actions">
+            <button id="openAppLog" class="ghost-button" title="Open the app log for diagnostics">Log</button>
+            <button id="checkStack" class="ghost-button">↻ Re-check</button>
+            <button id="installStack" class="action-btn start-all-btn" disabled>
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span id="installStackLabel">Install missing</span>
+            </button>
+          </div>
+        </div>
+        <p class="panel-description" id="stackVerdict">Checking your PHP stack…</p>
+        <div class="stack-grid" id="stackGrid">
+          <div class="graph-loading">Looking for PHP, MariaDB and phpMyAdmin…</div>
+        </div>
+        <div class="stack-progress" id="stackProgress" hidden>
+          <div class="stack-progress-head">
+            <span class="stack-progress-dot"></span>
+            <span id="stackProgressLabel">Working…</span>
+          </div>
+          <pre class="stack-log" id="stackLog"></pre>
+        </div>
+      </section>
+
+      <!-- ── Server Cards ─────────────────────────────────────────── -->
+      <section class="server-cards" id="serverCards">
+
+        <!-- Apache -->
+        <article class="server-card" data-server="httpd">
+          <div class="server-card-header">
+            <div class="server-icon apache-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <h3>Apache</h3>
+              <span class="server-service-name">httpd</span>
+            </div>
+          </div>
+          <div class="server-card-body">
+            <div class="status-indicator" id="apacheIndicator">
+              <span class="status-dot"></span>
+              <span class="status-text" id="apacheStatus">Checking…</span>
+            </div>
+          </div>
+          <div class="server-card-actions">
+            <button class="toggle-btn start-btn" data-single-action="start" data-service="httpd" id="apacheStartBtn">
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Start
+            </button>
+            <button class="toggle-btn stop-btn" data-single-action="stop" data-service="httpd" id="apacheStopBtn">
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg> Stop
+            </button>
+          </div>
+        </article>
+
+        <!-- MariaDB -->
+        <article class="server-card" data-server="mariadb">
+          <div class="server-card-header">
+            <div class="server-icon mariadb-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="12" cy="7" rx="8" ry="4" stroke="currentColor" stroke-width="2"/><path d="M4 12c0 2.21 3.58 4 8 4s8-1.79 8-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+              <h3>MariaDB</h3>
+              <span class="server-service-name">mariadb</span>
+            </div>
+          </div>
+          <div class="server-card-body">
+            <div class="status-indicator" id="mariadbIndicator">
+              <span class="status-dot"></span>
+              <span class="status-text" id="mariadbStatus">Checking…</span>
+            </div>
+          </div>
+          <div class="server-card-actions">
+            <button class="toggle-btn start-btn" data-single-action="start" data-service="mariadb" id="mariadbStartBtn">
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Start
+            </button>
+            <button class="toggle-btn stop-btn" data-single-action="stop" data-service="mariadb" id="mariadbStopBtn">
+              <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg> Stop
+            </button>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- ── Shortcuts ───────────────────────────────────── -->
+      <section class="panel php-panel">
+        <div class="panel-header">
+          <h2>Shortcuts</h2>
+        </div>
+        <p class="panel-description">Quick links for your LAMP stack.</p>
+        <div class="button-row">
+          <button id="openLocalhost" class="primary">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Open Localhost
+          </button>
+          <button id="runPhpMyAdmin" class="secondary">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            Run phpMyAdmin
+          </button>
+        </div>
+      </section>
+
+      <!-- ── Project Runner ───────────────────────────────────────── -->
+      <section class="panel php-panel">
+        <div class="panel-header">
+          <h2>Project Runner</h2>
+        </div>
+        <p class="panel-description">Select a specific PHP project folder to run locally on port 8000.</p>
+        <div class="folder-row">
+          <div class="folder-path-display" id="phpFolderDisplay">
+            <span class="folder-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></span>
+            <input id="phpFolder" type="text" placeholder="~/php-scripts" readonly />
+          </div>
+          <button id="chooseFolder" class="secondary">Browse…</button>
+        </div>
+        <div class="button-row compact" style="margin-top: 12px;">
+          <button id="startPhp" class="primary">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Run Project
+          </button>
+          <button id="openPhp" class="primary">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Open in Browser
+          </button>
+        </div>
+        <div class="url-qr-row" style="margin-top:12px;display:flex;gap:12px;align-items:center;">
+          <div class="url-box" id="phpUrlBox">http://localhost/project</div>
+          <div class="qr-block" id="phpQrBlock">
+            <img id="phpQrImg" alt="QR code for project URL" width="96" height="96" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ── QR Code Panel ─────────────────────────────────────────── -->
+      <section class="panel qr-hero-panel">
+        <div class="panel-header">
+          <div>
+            <h2>📱 Scan to Access from Your Phone</h2>
+            <p class="panel-description" style="margin-bottom:0;">Point your phone camera at the QR code to open your local server over the network.</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="refreshQr" class="small-btn primary">↻ Refresh</button>
+            <button id="downloadQr" class="small-btn secondary">⬇ Download</button>
+          </div>
+        </div>
+
+        <div class="qr-hero-body">
+          <div class="qr-hero-code">
+            <div class="qr-hero-frame" id="networkQrBlock">
+              <img id="networkQrImg" alt="Scan to access server" />
+            </div>
+            <p class="qr-scan-hint">Point your phone camera here</p>
+          </div>
+
+          <div class="qr-hero-info">
+            <div class="qr-info-row">
+              <span class="qr-info-label">Network URL</span>
+              <div id="networkQrUrl" class="url-box qr-url-big"></div>
+            </div>
+            <div class="qr-info-row" style="margin-top:12px;">
+              <span class="qr-info-label">Actions</span>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button id="copyQrUrl" class="secondary">📋 Copy URL</button>
+                <button id="openQrUrl" class="secondary">🌐 Open in Browser</button>
+              </div>
+            </div>
+            <div class="qr-tip">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Make sure your phone is on the same Wi-Fi network as this computer.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Recent Projects ───────────────────────────────────────── -->
+      <section class="panel" style="margin-bottom:18px;">
+        <div class="panel-header">
+          <h2>Recent Projects</h2>
+        </div>
+        <div id="recentProjects" class="list-box empty">No recent projects yet.</div>
+      </section>
+
+
+      <!-- ── Resource Usage ───────────────────────────────────────── -->
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Resource Usage</h2>
+        </div>
+        <div id="resourceGraph" class="graph-container">
+          <div class="graph-loading">Waiting for system data…</div>
+        </div>
+      </section>
+
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
